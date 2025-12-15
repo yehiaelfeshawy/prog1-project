@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1765828549 source:c:\users\yehia\onedrive\desktop\prog pr 2\p\main.c
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+
