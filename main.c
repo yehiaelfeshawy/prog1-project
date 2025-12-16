@@ -106,7 +106,8 @@ char keyword[100];
 int i,matches=0;
 printf("Enter keyword: ");
 getchar();
-fgets(keyword,sizeof(keyword),stdin);
+fgets(keyword, sizeof(keyword), stdin);
+keyword[strcspn(keyword, "\n")] = '\0';
 for(i=0;i<count;i++){
     if(strstr(acc[i].name,keyword)!=NULL){
         char *months[12]={"January","February","March","April","May","June",
@@ -125,18 +126,51 @@ if(matches==0)
     printf("Account is not found.\n");
 return matches;
 }
+void runSystem(void)
+{
+    int max_acc = 100, totalAccounts = 0;
+    int choice;
+    Account accounts[max_acc];
 
-int main()
-{ int max_acc=100,totalAccounts = 0;
+    if (!login())
+        return;
 
-Account accounts[max_acc];
+    if (!loadAccounts(accounts, &totalAccounts))
+        return;
 
-login();
-loadAccounts(accounts, &totalAccounts);
+    do
+    {printf("\n Welcome to the menu \n");
+        printf("1. Query by Account Number\n");
+        printf("2. Advanced Search (by Name)\n");
+        printf("0. Exit\n");
+        printf("Enter choice: ");
+        scanf("%d", &choice);
 
+        switch (choice)
+        {case 1:
+            query(accounts, totalAccounts);
+            break;
 
-return 0;
+        case 2:
+            AdvancedSearch(accounts, totalAccounts);
+            break;
+
+        case 0:
+            printf("Goodbye!\n");
+            break;
+
+        default:
+            printf("Invalid choice\n");}
+    } while (choice != 0);
 }
+
+ int main(){
+
+    runSystem();
+    return 0;
+}
+
+
 
 
 
