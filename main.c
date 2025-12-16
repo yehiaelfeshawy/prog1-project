@@ -101,6 +101,29 @@ if(!found)
     printf("Account is not found.\n");
 return found;
 }
+int AdvancedSearch(Account acc[], int count){
+char keyword[100];
+int i,matches=0;
+printf("Enter keyword: ");
+fgets(keyword,sizeof(keyword),stdin);
+for(i=0;i<count;i++){
+    if(strstr(acc[i].name,keyword)!=NULL){
+        char *months[12]={"January","February","March","April","May","June",
+        "July","August","September","October","November","December"};
+        printf("\nAccount Number: %lld\n",acc[i].accountNumber);
+        printf("Name: %s\n",acc[i].name);
+        printf("E-mail: %s%\n",acc[i].email);
+        printf("Balance: %lf $\n",acc[i].balance);
+        printf("Mobile: %s\n",acc[i].mobile);
+        printf("Date Opened: %s %d\n",months[acc[i].opened.month-1],acc[i].opened.year);
+        printf("Status: %s\n",acc[i].status);
+        matches++;
+    }
+}
+if(matches==0)
+    printf("Account is not found.\n");
+return matches;
+}
 
 int main()
 { int max_acc=100,totalAccounts = 0;
@@ -113,4 +136,5 @@ loadAccounts(accounts, &totalAccounts);
 
 return 0;
 }
+
 
