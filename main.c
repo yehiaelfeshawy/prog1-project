@@ -105,6 +105,7 @@ int AdvancedSearch(Account acc[], int count){
 char keyword[100];
 int i,matches=0;
 printf("Enter keyword: ");
+getchar();
 fgets(keyword,sizeof(keyword),stdin);
 for(i=0;i<count;i++){
     if(strstr(acc[i].name,keyword)!=NULL){
@@ -136,5 +137,6 @@ loadAccounts(accounts, &totalAccounts);
 
 return 0;
 }
+
 
 
