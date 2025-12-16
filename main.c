@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <math.h>
 
 typedef struct
 {int month;
@@ -76,7 +77,30 @@ acc[*count].status);
 fclose(fp);
 return 1;
 }
-
+int query(Account acc[], int count){
+long long SearchNumber;
+int i,found=0;
+printf("Enter account number: ");
+scanf("%lld",&SearchNumber);
+for(i=0;i<count;i++){
+    if(acc[i].accountNumber==SearchNumber){
+        char *months[12]={"January","February","March","April","May","June",
+        "July","August","September","October","November","December"};
+        printf("\nAccount Number: %lld\n",acc[i].accountNumber);
+        printf("Name: %s\n",acc[i].name);
+        printf("E-mail: %s%\n",acc[i].email);
+        printf("Balance: %lf $\n",acc[i].balance);
+        printf("Mobile: %s\n",acc[i].mobile);
+        printf("Date Opened: %s %d\n",months[acc[i].opened.month-1],acc[i].opened.year);
+        printf("Status: %s\n",acc[i].status);
+        found=1;
+        break;
+    }
+}
+if(!found)
+    printf("Account is not found.\n");
+return found;
+}
 
 int main()
 { int max_acc=100,totalAccounts = 0;
@@ -89,3 +113,4 @@ loadAccounts(accounts, &totalAccounts);
 
 return 0;
 }
+
