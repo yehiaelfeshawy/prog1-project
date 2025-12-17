@@ -126,6 +126,96 @@ if(matches==0)
     printf("Account is not found.\n");
 return matches;
 }
+int addAccount(Account acc[], int *count, int max_acc)
+{
+    int i;
+    Account newAcc;
+
+    if (*count >= max_acc)
+    {
+        printf("Maximum number of accounts reached.\n");
+        return 0;
+    }
+
+    printf("Enter Account Number: ");
+    scanf("%lld", &newAcc.accountNumber);
+
+    for (i = 0; i < *count; i++)
+    {
+        if (acc[i].accountNumber == newAcc.accountNumber)
+        {
+            printf("Duplicate account number!\n");
+            return 0;
+        }
+    }
+
+    getchar();
+    printf("Enter Name: ");
+    fgets(newAcc.name, sizeof(newAcc.name), stdin);
+    newAcc.name[strcspn(newAcc.name, "\n")] = '\0';
+
+    printf("Enter Email: ");
+    fgets(newAcc.email, sizeof(newAcc.email), stdin);
+    newAcc.email[strcspn(newAcc.email, "\n")] = '\0';
+
+    printf("Enter Mobile: ");
+    fgets(newAcc.mobile, sizeof(newAcc.mobile), stdin);
+    newAcc.mobile[strcspn(newAcc.mobile, "\n")] = '\0';
+
+    printf("Enter Initial Balance: ");
+    scanf("%lf", &newAcc.balance);
+
+    do {
+        printf("Enter Opening Month (1-12): ");
+        scanf("%d", &newAcc.opened.month);
+    } while (newAcc.opened.month < 1 || newAcc.opened.month > 12);
+
+    do {
+        printf("Enter Opening Year: ");
+        scanf("%d", &newAcc.opened.year);
+    } while (newAcc.opened.year < 1900);
+
+    strcpy(newAcc.status, "active");
+
+    acc[*count] = newAcc;
+    (*count)++;
+
+    printf("Account added successfully.\n");
+    return 1;
+}
+
+int deleteAccount(Account acc[], int *count)
+{
+    long long accNum;
+    int i, j;
+
+    printf("Enter Account Number to delete: ");
+    scanf("%lld", &accNum);
+
+    for (i = 0; i < *count; i++)
+    {
+    if (acc[i].accountNumber == accNum)
+    {
+    if (acc[i].balance != 0)
+    {
+    printf("Cannot delete account. Balance is not zero.\n");
+    return 0;
+    }
+    for (j = i; j < *count - 1; j++)
+    {
+    acc[j] = acc[j + 1];
+    }
+    (*count)--;
+    printf("Account deleted successfully.\n");
+    return 1;
+    }
+    }
+
+    printf("Account not found.\n");
+    return 0;
+}
+
+
 void runSystem(void)
 {
     int max_acc = 100, totalAccounts = 0;
@@ -142,6 +232,8 @@ void runSystem(void)
     {printf("\n Welcome to the menu \n");
         printf("1. Query by Account Number\n");
         printf("2. Advanced Search (by Name)\n");
+        printf("3. Add Account\n");
+        printf("4. Delete Account\n");
         printf("0. Exit\n");
         printf("Enter choice: ");
         scanf("%d", &choice);
@@ -153,6 +245,14 @@ void runSystem(void)
 
         case 2:
             AdvancedSearch(accounts, totalAccounts);
+            break;
+
+        case 3:
+            addAccount(accounts, &totalAccounts, max_acc);
+            break;
+
+        case 4:
+            deleteAccount(accounts, &totalAccounts);
             break;
 
         case 0:
@@ -169,6 +269,7 @@ void runSystem(void)
     runSystem();
     return 0;
 }
+
 
 
 
