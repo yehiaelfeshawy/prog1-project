@@ -214,6 +214,37 @@ int deleteAccount(Account acc[], int *count)
     printf("Account not found.\n");
     return 0;
 }
+int modifyAccount(Account acc[], int count){
+long long accnum;
+int i, found=0;
+printf("enter your account number to modify: ");
+scanf("%lld",&accnum);
+getchar();
+for(i=0;i<count;i++){
+    if(acc[i].accountNumber==accnum){
+        printf("\ncurrent name: %s\n",acc[i].name);
+        printf("enter new name: ");
+        fgets(acc[i].name,sizeof(acc[i].name),stdin);
+        acc[i].name[strcspn(acc[i].name,"\n")]='\0';
+        printf("\ncurrent email: %s\n",acc[i].email);
+        printf("enter new email: ");
+        fgets(acc[i].email,sizeof(acc[i].email),stdin);
+        acc[i].email[strcspn(acc[i].email,"\n")]='\0';
+        printf("current phone number: %s\n",acc[i].mobile);
+        printf("enter new phone number: ");
+        fgets(acc[i].mobile,sizeof(acc[i].mobile),stdin);
+        acc[i].mobile[strcspn(acc[i].mobile,"\n")]='\0';
+        printf("account modified succesfully.\n");
+        found =1;
+        break;
+     }
+}
+if(!found){
+    printf("account not found.\n");
+    return 0;
+}
+return 1;
+}
 
 
 void runSystem(void)
@@ -269,6 +300,7 @@ void runSystem(void)
     runSystem();
     return 0;
 }
+
 
 
 
