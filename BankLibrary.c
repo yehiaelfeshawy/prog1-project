@@ -269,7 +269,49 @@ else{
 
 
 }
-
+int withdraw(Account acc[],int count){
+long long accnum;
+double amount;
+int i,found=0;
+printf("Enter account number: ");
+scanf("%lld",&accnum);
+while(getchar()!='\n');
+for(i=0;i<count;i++){
+    if(acc[i].accountNumber==accnum){
+        found=1;
+        break;
+    }
+}
+if(!found){
+    printf("Account does not exist.\n");
+    return 0;
+}
+if(strcmp(acc[i].status,"inactive")==0){
+    printf("Account is inactive. Withdrawals not allowed.\n");
+    return 0;
+}
+printf("\nEnter withdrawal amount: ");
+scanf("%lf",&amount);
+if(amount<=0){
+    printf("invalid amount");
+    return 0;
+}
+if(amount>acc[i].balance){
+    printf("Insufficient funds.\n");
+    return 0;
+}
+if(acc[i].dailyWithdrawn+amount>50000){
+    printf("Daily limit exceeded.\n");
+    printf("You can withdraw up to %lf today.\n", 50000-acc[i].dailyWithdrawn);
+    return 0;
+}
+acc[i].balance=acc[i].balance-amount;
+acc[i].dailyWithdrawn=acc[i].dailyWithdrawn+amount;
+printf("Withdrawal successful.\n");
+printf("Remaining balance: %lf\n",acc[i].balance);
+printf("Withdrawn today: %lf\n",acc[i].dailyWithdrawn);
+return 1;
+}
 
 void runSystem(void)
 {
