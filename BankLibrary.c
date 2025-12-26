@@ -55,6 +55,10 @@ acc[*count].mobile,
 &acc[*count].opened.month,
 &acc[*count].opened.year,
 acc[*count].status);
+acc[*count].name[strcspn(acc[*count].name, "\r\n")] = '\0';
+acc[*count].email[strcspn(acc[*count].email, "\r\n")] = '\0';
+acc[*count].mobile[strcspn(acc[*count].mobile, "\r\n")] = '\0';
+acc[*count].status[strcspn(acc[*count].status, "\r\n")] = '\0';
 (*count)++;
 }
 fclose(fp);
@@ -65,13 +69,14 @@ long long SearchNumber;
 int i,found=0;
 printf("Enter account number: ");
 scanf("%lld",&SearchNumber);
+getchar();
 for(i=0;i<count;i++){
     if(acc[i].accountNumber==SearchNumber){
         char *months[12]={"January","February","March","April","May","June",
         "July","August","September","October","November","December"};
         printf("\nAccount Number: %lld\n",acc[i].accountNumber);
         printf("Name: %s\n",acc[i].name);
-        printf("E-mail: %s\n",acc[i].email);
+        printf("E-mail: %s%\n",acc[i].email);
         printf("Balance: %lf $\n",acc[i].balance);
         printf("Mobile: %s\n",acc[i].mobile);
         printf("Date Opened: %s %d\n",months[acc[i].opened.month-1],acc[i].opened.year);
@@ -97,7 +102,7 @@ for(i=0;i<count;i++){
         "July","August","September","October","November","December"};
         printf("\nAccount Number: %lld\n",acc[i].accountNumber);
         printf("Name: %s\n",acc[i].name);
-        printf("E-mail: %s\n",acc[i].email);
+        printf("E-mail: %s%\n",acc[i].email);
         printf("Balance: %lf $\n",acc[i].balance);
         printf("Mobile: %s\n",acc[i].mobile);
         printf("Date Opened: %s %d\n",months[acc[i].opened.month-1],acc[i].opened.year);
@@ -228,6 +233,7 @@ if(!found){
 }
 return 1;
 }
+
 int changeStatus(Account acc[], int count){
 long long accnum;
 printf("Enter your account number to change status: ");
@@ -263,6 +269,7 @@ else{
 
 
 }
+
 
 void runSystem(void)
 {
@@ -317,4 +324,3 @@ void runSystem(void)
             printf("Invalid choice\n");}
     } while (choice != 0);
 }
-
