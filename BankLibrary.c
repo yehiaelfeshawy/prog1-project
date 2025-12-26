@@ -226,7 +226,41 @@ if(!found){
 }
 return 1;
 }
+int changeStatus(Account acc[], int count){
+long long accnum;
+printf("Enter your account number to change status: ");
+scanf("%lld",&accnum);
+getchar();
+int found=0, i;
+for(i=0;i<count;i++){
+    if(acc[i].accountNumber==accnum){
+        found =1;
+        break;
+    }
+}
+if(!found){
+    printf("Account not found.\n");
+    return 0;
+}
+printf("Current status: %s\n",acc[i].status);
+char newStatus[10];
+printf("Enter desired status (active/inactive): ");
+fgets(newStatus,sizeof(newStatus),stdin);
+newStatus[strcspn(newStatus,"\n")]='\0';
+if(strcmp(acc[i].status,newStatus)==0){
+        printf("The account is already %s.\n",newStatus);
+        return 0;
+    }
+else{
+        strcpy(acc[i].status,newStatus);
+        printf("Account status has successfully changed to %s.\n",newStatus);
+        return 1;
+    }
 
+
+
+
+}
 
 void runSystem(void)
 {
