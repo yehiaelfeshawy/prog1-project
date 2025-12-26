@@ -16,7 +16,9 @@ int login(void)
     scanf("%s", pass);
     getchar();
     while (fscanf(fp, "%s %s", fileUser, filePass) != EOF)
-    {   if (strcmp(user, fileUser) == 0 && strcmp(pass, filePass) == 0)
+    {   fileUser[strcspn(fileUser,"\r\n")]='\0';
+        filePass[strcspn(filePass,"\r\n")]='\0';
+        if (strcmp(user, fileUser) == 0 && strcmp(pass, filePass) == 0)
         { found = 1; break;}
     }
     fclose(fp);
