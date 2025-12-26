@@ -69,7 +69,7 @@ for(i=0;i<count;i++){
         "July","August","September","October","November","December"};
         printf("\nAccount Number: %lld\n",acc[i].accountNumber);
         printf("Name: %s\n",acc[i].name);
-        printf("E-mail: %s%\n",acc[i].email);
+        printf("E-mail: %s\n",acc[i].email);
         printf("Balance: %lf $\n",acc[i].balance);
         printf("Mobile: %s\n",acc[i].mobile);
         printf("Date Opened: %s %d\n",months[acc[i].opened.month-1],acc[i].opened.year);
@@ -95,7 +95,7 @@ for(i=0;i<count;i++){
         "July","August","September","October","November","December"};
         printf("\nAccount Number: %lld\n",acc[i].accountNumber);
         printf("Name: %s\n",acc[i].name);
-        printf("E-mail: %s%\n",acc[i].email);
+        printf("E-mail: %s\n",acc[i].email);
         printf("Balance: %lf $\n",acc[i].balance);
         printf("Mobile: %s\n",acc[i].mobile);
         printf("Date Opened: %s %d\n",months[acc[i].opened.month-1],acc[i].opened.year);
