@@ -729,7 +729,7 @@ void deleteMultiple(Account acc[], int *count)
             break;
 
         case 0:
-           printf(YELLOW "Daily limit exceeded.\n" RESET);
+           printf(YELLOW "Operation cancelled.\n" RESET);
 
             break;
 
