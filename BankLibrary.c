@@ -46,7 +46,7 @@ while (fgets(line, sizeof(line), fp) != NULL)
 {
 if (*count >= max_acc)
 break;
-sscanf(line,"%lld,%[^,],%[^,],%lf,%[^,],%d-%d,%[^\n]",
+sscanf(line,"%lld,%[^,],%[^,],%lf,%[^,],%d-%d, %s",
 &acc[*count].accountNumber,
 acc[*count].name,
 acc[*count].email,
