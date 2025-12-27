@@ -251,24 +251,25 @@ if(!found){
     return 0;
 }
 printf("Current status: %s\n",acc[i].status);
-char newStatus[10];
+char newStatus[20];
 printf("Enter desired status (active/inactive): ");
 fgets(newStatus,sizeof(newStatus),stdin);
 newStatus[strcspn(newStatus,"\n")]='\0';
+if(strcmp(newStatus,"active")!=0&&strcmp(newStatus,"inactive")!=0){
+    printf("Invalid choice. Please type 'active' or 'inactive'.\n");
+    return 0;
+}
 if(strcmp(acc[i].status,newStatus)==0){
-        printf("The account is already %s.\n",newStatus);
-        return 0;
-    }
-else{
-        strcpy(acc[i].status,newStatus);
-        printf("Account status has successfully changed to %s.\n",newStatus);
-        return 1;
-    }
-
-
+    printf("Account is already %s.\n",newStatus);
+    return 0;
+}
+strcpy(acc[i].status,newStatus);
+printf("Account status successfully changed to %s.\n",newStatus);
+return 1;
 
 
 }
+
 int withdraw(Account acc[],int count){
 long long accnum;
 double amount;
@@ -313,6 +314,8 @@ printf("Withdrawn today: %lf\n",acc[i].dailyWithdrawn);
 return 1;
 }
 
+
+
 void runSystem(void)
 {
     int max_acc = 100, totalAccounts = 0;
@@ -332,6 +335,8 @@ void runSystem(void)
         printf("3. Add Account\n");
         printf("4. Delete Account\n");
         printf("5. Modify Account\n");
+        printf("6. Change Account Status\n");
+        printf("7. Withdraw\n");
         printf("0. Exit\n");
         printf("Enter choice: ");
         scanf("%d", &choice);
@@ -357,6 +362,13 @@ void runSystem(void)
         case 5:
             modifyAccount(accounts, totalAccounts);
             break;
+
+        case 6:
+            changeStatus(accounts,totalAccounts);
+            break;
+
+        case 7:
+            withdraw(accounts,totalAccounts);
 
         case 0:
             printf("Goodbye!\n");
