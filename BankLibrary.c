@@ -369,6 +369,7 @@ void runSystem(void)
 
         case 7:
             withdraw(accounts,totalAccounts);
+            break;
 
         case 0:
             printf("Goodbye!\n");
