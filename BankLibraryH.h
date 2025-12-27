@@ -40,6 +40,13 @@ int deposit(Account acc[],int);
 int report(Account acc[], int count);
 int transfer(Account acc[], int count);
 
+void printAccounts(Account acc[], int count);
+void sortByName(Account acc[], int count);
+void sortByBalance(Account acc[], int count);
+void sortByDate(Account acc[], int count);
+void sortByStatus(Account acc[], int count);
+
+void swap(Account *x, Account *y);
 
 
 void runSystem(void);
