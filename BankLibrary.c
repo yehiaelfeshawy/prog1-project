@@ -46,7 +46,7 @@ while (fgets(line, sizeof(line), fp) != NULL)
 {
 if (*count >= max_acc)
 break;
-sscanf(line,"%lld,%[^,],%[^,],%lf,%[^,],%d-%d,%[^\n]",
+sscanf(line,"%lld,%[^,],%[^,],%lf,%[^,],%d-%d, %s",
 &acc[*count].accountNumber,
 acc[*count].name,
 acc[*count].email,
@@ -323,6 +323,25 @@ acc[i].dailyWithdrawn=acc[i].dailyWithdrawn+amount;
 printf("Withdrawal successful.\n");
 printf("Remaining balance: %lf\n",acc[i].balance);
 printf("Withdrawn today: %lf\n",acc[i].dailyWithdrawn);
+FILE *fp=fopen("accounts.txt", "w");
+int j;
+    if(fp) {
+        for(j=0;j<count;j++) {
+            fprintf(fp, "%lld,%s,%s,%.2lf,%s,%d-%d, %s\n",
+                acc[j].accountNumber,
+                acc[j].name,
+                acc[j].email,
+                acc[j].balance,
+                acc[j].mobile,
+                acc[j].opened.month,
+                acc[j].opened.year,
+                acc[j].status);
+}
+        fclose(fp);
+}
+else{
+        printf("Warning: Failed to update accounts file!\n");
+}
 return 1;
 }
 int deposit(Account acc[],int count){
@@ -355,6 +374,25 @@ if(amount<=0||amount>10000){
 acc[i].balance=acc[i].balance+amount;
 printf("Deposit successful.\n");
 printf("Current balance: %lf",acc[i].balance);
+FILE *fp=fopen("accounts.txt", "w");
+int j;
+    if(fp){
+        for(j=0;j<count;j++) {
+            fprintf(fp, "%lld,%s,%s,%.2lf,%s,%d-%d, %s\n",
+                acc[j].accountNumber,
+                acc[j].name,
+                acc[j].email,
+                acc[j].balance,
+                acc[j].mobile,
+                acc[j].opened.month,
+                acc[j].opened.year,
+                acc[j].status);
+}
+        fclose(fp);
+}
+else{
+        printf("Warning: Failed to update accounts file!\n");
+}
 return 1;
 }
 
@@ -415,10 +453,10 @@ void runSystem(void)
         case 7:
             withdraw(accounts,totalAccounts);
             break;
-         
+
         case 8:
             deposit(accounts,totalAccounts);
-                break;
+            break:
          
         case 0:
             printf("Goodbye!\n");

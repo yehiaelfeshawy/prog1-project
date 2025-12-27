@@ -21,6 +21,7 @@ double balance;
 char mobile[20];
 Date opened;
 char status[20];
+double dailyWithdrawn;
 } Account;
 
 int login(void);
