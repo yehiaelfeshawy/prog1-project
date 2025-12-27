@@ -35,6 +35,7 @@ int deleteAccount(Account acc[], int *count);
 int modifyAccount(Account acc[], int);
 int withdraw(Account acc[],int);
 int changeStatus(Account acc[],int);
+int deposit(Account acc[],int);
 
 
 void runSystem(void);
