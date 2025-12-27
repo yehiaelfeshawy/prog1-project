@@ -76,7 +76,7 @@ for(i=0;i<count;i++){
         "July","August","September","October","November","December"};
         printf("\nAccount Number: %lld\n",acc[i].accountNumber);
         printf("Name: %s\n",acc[i].name);
-        printf("E-mail: %s%\n",acc[i].email);
+        printf("E-mail: %s\n",acc[i].email);
         printf("Balance: %lf $\n",acc[i].balance);
         printf("Mobile: %s\n",acc[i].mobile);
         printf("Date Opened: %s %d\n",months[acc[i].opened.month-1],acc[i].opened.year);
@@ -102,7 +102,7 @@ for(i=0;i<count;i++){
         "July","August","September","October","November","December"};
         printf("\nAccount Number: %lld\n",acc[i].accountNumber);
         printf("Name: %s\n",acc[i].name);
-        printf("E-mail: %s%\n",acc[i].email);
+        printf("E-mail: %s\n",acc[i].email);
         printf("Balance: %lf $\n",acc[i].balance);
         printf("Mobile: %s\n",acc[i].mobile);
         printf("Date Opened: %s %d\n",months[acc[i].opened.month-1],acc[i].opened.year);
@@ -418,7 +418,7 @@ void runSystem(void)
          
         case 8:
             deposit(accounts,totalAccounts);
-            break:
+                break;
          
         case 0:
             printf("Goodbye!\n");
@@ -428,3 +428,123 @@ void runSystem(void)
             printf("Invalid choice\n");}
     } while (choice != 0);
 }
+
+int report(Account acc[], int count)
+{
+    long long accnum;
+    char filename[50];
+    char lines[100][200];
+    int i = 0, total = 0;
+
+    printf("Enter account number: ");
+    scanf("%lld", &accnum);
+    getchar();
+
+    sprintf(filename, "%lld.txt", accnum);
+
+    FILE *fp = fopen(filename, "r");
+    if (fp == NULL)
+    {
+        printf("No transaction history for this account.\n");
+        return 0;
+    }
+
+    while (fgets(lines[total], 200, fp) != NULL)
+    {
+        total++;
+    }
+    fclose(fp);
+
+    if (total == 0)
+    {
+        printf("No transactions found.\n");
+        return 0;
+    }
+
+    printf("\nLast transactions:\n");
+
+    for (i = total - 1; i >= 0 && i >= total - 5; i--)
+    {
+        printf("%s", lines[i]);
+    }
+
+    return 1;
+}
+int transfer(Account acc[], int count)
+{
+    long long from, to;
+    double amount;
+    int i, fromIndex = -1, toIndex = -1;
+
+    printf("Enter sender account number: ");
+    scanf("%lld", &from);
+
+    printf("Enter receiver account number: ");
+    scanf("%lld", &to);
+    getchar();
+
+    for (i = 0; i < count; i++)
+    {
+        if (acc[i].accountNumber == from)
+            fromIndex = i;
+        if (acc[i].accountNumber == to)
+            toIndex = i;
+    }
+
+    if (fromIndex == -1 || toIndex == -1)
+    {
+        printf("One of the accounts does not exist.\n");
+        return 0;
+    }
+
+    if (strcmp(acc[fromIndex].status, "inactive") == 0 ||
+        strcmp(acc[toIndex].status, "inactive") == 0)
+    {
+        printf("Transfer cannot be completed. One or both accounts are inactive.\n");
+        return 0;
+    }
+
+    printf("Enter transfer amount: ");
+    scanf("%lf", &amount);
+
+    if (amount <= 0)
+    {
+        printf("Invalid amount.\n");
+        return 0;
+    }
+
+    if (amount > acc[fromIndex].balance)
+    {
+        printf("Not enough balance.\n");
+        return 0;
+    }
+
+    acc[fromIndex].balance -= amount;
+    acc[toIndex].balance += amount;
+
+    /* save transaction for sender */
+    FILE *fp1;
+    char file1[50];
+    sprintf(file1, "%lld.txt", from);
+    fp1 = fopen(file1, "a");
+    if (fp1 != NULL)
+    {
+        fprintf(fp1, "Transferred %.2lf to %lld\n", amount, to);
+        fclose(fp1);
+    }
+
+    /* save transaction for receiver */
+    FILE *fp2;
+    char file2[50];
+    sprintf(file2, "%lld.txt", to);
+    fp2 = fopen(file2, "a");
+    if (fp2 != NULL)
+    {
+        fprintf(fp2, "Received %.2lf from %lld\n", amount, from);
+        fclose(fp2);
+    }
+
+    printf("Transfer successful.\n");
+    return 1;
+}
+

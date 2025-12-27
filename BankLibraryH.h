@@ -36,6 +36,9 @@ int modifyAccount(Account acc[], int);
 int withdraw(Account acc[],int);
 int changeStatus(Account acc[],int);
 int deposit(Account acc[],int);
+int report(Account acc[], int count);
+int transfer(Account acc[], int count);
+
 
 
 void runSystem(void);
