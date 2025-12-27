@@ -813,7 +813,7 @@ void runSystem(void)
     break;
         
         case 12:
-    deleteMultiple(accounts,totalAccounts);
+    deleteMultiple(accounts, &totalAccounts);
     break;
 
 
