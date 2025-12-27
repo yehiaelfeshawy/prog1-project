@@ -164,6 +164,7 @@ int addAccount(Account acc[], int *count, int max_acc)
     (*count)++;
 
     printf("Account added successfully.\n");
+    printf("Date opened: %d-%d\n",newAcc.opened.month,newAcc.opened.year);
     return 1;
 }
 
