@@ -324,6 +324,7 @@ printf("Withdrawal successful.\n");
 printf("Remaining balance: %lf\n",acc[i].balance);
 printf("Withdrawn today: %lf\n",acc[i].dailyWithdrawn);
 FILE *fp=fopen("accounts.txt", "w");
+int j;
     if(fp) {
         for(j=0;j<count;j++) {
             fprintf(fp, "%lld,%s,%s,%.2lf,%s,%d-%d, %s\n",
@@ -374,6 +375,7 @@ acc[i].balance=acc[i].balance+amount;
 printf("Deposit successful.\n");
 printf("Current balance: %lf",acc[i].balance);
 FILE *fp=fopen("accounts.txt", "w");
+int j;
     if(fp){
         for(j=0;j<count;j++) {
             fprintf(fp, "%lld,%s,%s,%.2lf,%s,%d-%d, %s\n",
