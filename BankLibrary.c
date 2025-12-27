@@ -352,7 +352,7 @@ if(amount<=0||amount>10000){
     printf("Invalid amount.\n");
     return 0;
 }
-acc[i].balance=acc[i].balance+amount;
+acc[i].balance=acc[i].balance-amount;
 printf("Deposit successful.\n");
 printf("Current balance: %lf",acc[i].balance);
 return 1;
