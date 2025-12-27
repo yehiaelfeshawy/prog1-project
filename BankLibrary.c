@@ -415,11 +415,11 @@ void runSystem(void)
         case 7:
             withdraw(accounts,totalAccounts);
             break;
-         
+
         case 8:
             deposit(accounts,totalAccounts);
-            break:
-         
+            break;
+
         case 0:
             printf("Goodbye!\n");
             break;
