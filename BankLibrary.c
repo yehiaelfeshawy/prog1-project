@@ -606,6 +606,124 @@ void printAccounts(Account acc[], int count)
 }
 
 
+void saveAfterDelete(Account acc[], int count)
+{
+    FILE *fp = fopen("accounts.txt", "w");
+    if (!fp) return;
+
+    for (int i = 0; i < count; i++)
+    {
+        fprintf(fp,"%lld,%s,%s,%.2lf,%s,%d-%d, %s\n",
+            acc[i].accountNumber,
+            acc[i].name,
+            acc[i].email,
+            acc[i].balance,
+            acc[i].mobile,
+            acc[i].opened.month,
+            acc[i].opened.year,
+            acc[i].status);
+    }
+    fclose(fp);
+}
+
+void deleteByDate(Account acc[], int *count)
+{
+    int month, year;
+    int deleted = 0;
+
+    printf("Enter month and year (MM YYYY): ");
+    scanf("%d %d", &month, &year);
+
+    for (int i = 0; i < *count; )
+    {
+        if (acc[i].opened.month == month &&
+            acc[i].opened.year == year &&
+            acc[i].balance == 0)
+        {
+            for (int j = i; j < *count - 1; j++)
+                acc[j] = acc[j + 1];
+
+            (*count)--;
+            deleted++;
+        }
+        else
+            i++;
+    }
+
+    if (deleted == 0)
+        printf("No accounts found in the given date with zero balance.\n");
+    else
+        printf("Operation completed. %d account(s) deleted.\n", deleted);
+
+    saveAfterDelete(acc, *count);
+}
+
+void deleteInactive(Account acc[], int *count)
+{
+    int currentMonth, currentYear;
+    int deleted = 0;
+
+    printf("Enter current month and year (MM YYYY): ");
+    scanf("%d %d", &currentMonth, &currentYear);
+
+    for (int i = 0; i < *count; )
+    {
+        int monthsPassed =
+            (currentYear - acc[i].opened.year) * 12 +
+            (currentMonth - acc[i].opened.month);
+
+        if (strcmp(acc[i].status, "inactive") == 0 &&
+            acc[i].balance == 0 &&
+            monthsPassed > 3)
+        {
+            for (int j = i; j < *count - 1; j++)
+                acc[j] = acc[j + 1];
+
+            (*count)--;
+            deleted++;
+        }
+        else
+            i++;
+    }
+
+    if (deleted == 0)
+        printf("No inactive accounts older than 3 months with zero balance.\n");
+    else
+        printf("Operation completed. %d account(s) deleted.\n", deleted);
+
+    saveAfterDelete(acc, *count);
+}
+
+void deleteMultiple(Account acc[], int *count)
+{
+    int choice;
+
+    printf("\nDELETE MULTIPLE MENU:\n");
+    printf("1. Delete by Date (Month & Year)\n");
+    printf("2. Delete Inactive Accounts (> 3 months)\n");
+    printf("0. Cancel\n");
+    printf("Enter choice: ");
+    scanf("%d", &choice);
+
+    switch (choice)
+    {
+        case 1:
+            deleteByDate(acc, count);
+            break;
+
+        case 2:
+            deleteInactive(acc, count);
+            break;
+
+        case 0:
+            printf("Operation cancelled.\n");
+            break;
+
+        default:
+            printf("Invalid choice.\n");
+    }
+}
+
 void runSystem(void)
 {
     int max_acc = 100, totalAccounts = 0;
@@ -631,6 +749,7 @@ void runSystem(void)
         printf("9.  Report\n");
         printf("10. Transfer\n");
         printf("11. Print All Accounts (Sorted)\n");
+        printf("12. Delete Multiple Accounts\n");
         printf("0. Exit\n");
         printf("Enter choice: ");
         scanf("%d", &choice);
@@ -674,8 +793,12 @@ void runSystem(void)
         case 10:
             transfer(accounts,totalAccounts);
             break;
-            case 11:
-    printAccounts(accounts, totalAccounts);
+        case 11:
+    printAccounts(accounts,totalAccounts);
+    break;
+
+        case 12:
+    deleteMultiple(accounts,totalAccounts);
     break;
 
 
@@ -686,6 +809,5 @@ void runSystem(void)
 
         default:
             printf("Invalid choice\n");}
-    } while (choice != 0);
-}
-        
+    } while (choice != 0);}
+      
