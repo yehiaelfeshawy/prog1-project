@@ -1,4 +1,11 @@
-#include "BankLibraryH.h"
+
+      #include "BankLibraryH.h"
+#define RED    "\033[1;31m"
+#define GREEN  "\033[1;32m"
+#define YELLOW "\033[1;33m"
+#define BLUE   "\033[1;34m"
+#define RESET  "\033[0m"
+
 
 int login(void)
 {
@@ -8,7 +15,8 @@ int login(void)
     int found = 0;
     fp = fopen("users.txt", "r");
     if (fp == NULL)
-    {printf("The file doesn't exist\n");
+    {printf(RED "The file doesn't exist\n" RESET);
+
         return 0;}
     printf("Username: ");
     scanf("%s", user);
@@ -24,10 +32,11 @@ int login(void)
     fclose(fp);
 
     if (found)
-    { printf("Login successful\n");
+    { printf(GREEN "Login successful\n" RESET);
+
         return 1; }
     else
-    {printf("Try again invalid username or password\n");
+    {printf(RED "Try again invalid username or password\n" RESET);
         return 0; }
 }
 int loadAccounts(Account acc[], int *count)
@@ -37,7 +46,9 @@ char line[200];
 int max_acc=100;
 fp = fopen("accounts.txt", "r");
  if (fp == NULL)
-    {printf("The file doesn't exist\n");
+    {printf(RED "The file doesn't exist\n" RESET);
+
+
         return 0;}
 *count = 0;
 
@@ -314,13 +325,14 @@ if(amount>acc[i].balance){
     return 0;
 }
 if(acc[i].dailyWithdrawn+amount>50000){
-    printf("Daily limit exceeded.\n");
+    printf(YELLOW "Daily limit exceeded.\n" RESET);
+
     printf("You can withdraw up to %lf today.\n", 50000-acc[i].dailyWithdrawn);
     return 0;
 }
 acc[i].balance=acc[i].balance-amount;
 acc[i].dailyWithdrawn=acc[i].dailyWithdrawn+amount;
-printf("Withdrawal successful.\n");
+printf(GREEN "Withdrawal successful.\n" RESET);
 printf("Remaining balance: %lf\n",acc[i].balance);
 printf("Withdrawn today: %lf\n",acc[i].dailyWithdrawn);
 FILE *fp=fopen("accounts.txt", "w");
@@ -340,7 +352,7 @@ int j;
         fclose(fp);
 }
 else{
-        printf("Warning: Failed to update accounts file!\n");
+        printf(RED "Warning: Failed to update accounts file!\n" RESET);
 }
 return 1;
 }
@@ -373,7 +385,7 @@ if(amount<=0||amount>10000){
     return 0;
 }
 acc[i].balance=acc[i].balance+amount;
-printf("Deposit successful.\n");
+printf(GREEN "Deposit successful.\n" RESET);
 printf("Current balance: %lf",acc[i].balance);
 FILE *fp=fopen("accounts.txt", "w");
 int j;
@@ -512,7 +524,8 @@ int transfer(Account acc[], int count)
         fclose(fp2);
     }
 
-    printf("Transfer successful.\n");
+    printf(GREEN "Transfer successful.\n" RESET);
+
     return 1;
 }
 void swap(Account *x, Account *y)
@@ -698,7 +711,7 @@ void deleteMultiple(Account acc[], int *count)
 {
     int choice;
 
-    printf("\nDELETE MULTIPLE MENU:\n");
+    printf(BLUE "\nDELETE MULTIPLE MENU:\n" RESET);
     printf("1. Delete by Date (Month & Year)\n");
     printf("2. Delete Inactive Accounts (> 3 months)\n");
     printf("0. Cancel\n");
@@ -716,7 +729,8 @@ void deleteMultiple(Account acc[], int *count)
             break;
 
         case 0:
-            printf("Operation cancelled.\n");
+           printf(YELLOW "Daily limit exceeded.\n" RESET);
+
             break;
 
         default:
@@ -737,7 +751,8 @@ void runSystem(void)
         return;
 
     do
-    {printf("\n Welcome to the menu \n");
+    {printf(BLUE "\n Welcome to the menu \n" RESET);
+
         printf("1.  Query by Account Number\n");
         printf("2.  Advanced Search (by Name)\n");
         printf("3.  Add Account\n");
@@ -796,7 +811,7 @@ void runSystem(void)
         case 11:
     printAccounts(accounts,totalAccounts);
     break;
-
+        
         case 12:
     deleteMultiple(accounts,totalAccounts);
     break;
@@ -809,5 +824,5 @@ void runSystem(void)
 
         default:
             printf("Invalid choice\n");}
-    } while (choice != 0);}
-      
+    } while (choice != 0);
+}
