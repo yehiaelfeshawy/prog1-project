@@ -420,6 +420,8 @@ void runSystem(void)
         printf("6. Change Account Status\n");
         printf("7. Withdraw\n");
         printf("8. Deposit\n");
+        printf("9. Report\n");
+        printf("10. Transfer\n");
         printf("0. Exit\n");
         printf("Enter choice: ");
         scanf("%d", &choice);
@@ -456,8 +458,13 @@ void runSystem(void)
 
         case 8:
             deposit(accounts,totalAccounts);
-            break:
-         
+            break;
+        case 9:
+            report(accounts,totalAccounts);
+            break;
+        case 10:
+            transfer(accounts,totalAccounts);
+            break;     
         case 0:
             printf("Goodbye!\n");
             break;
