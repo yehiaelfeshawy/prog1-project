@@ -163,6 +163,22 @@ int addAccount(Account acc[], int *count, int max_acc)
     acc[*count] = newAcc;
     (*count)++;
 
+    FILE *fp = fopen("accounts.txt","a");
+    if(fp == NULL){
+        printf("Error opening file to save account.\n");
+        return 0;
+    }
+    fprintf(fp, "%lld,%s,%s,%.2lf,%s,%d-%d, %s\n",
+            newAcc.accountNumber,
+            newAcc.name,
+            newAcc.email,
+            newAcc.balance,
+            newAcc.mobile,
+            newAcc.opened.month,
+            newAcc.opened.year,
+            newAcc.status);
+    fclose(fp);
+
     printf("Account added successfully.\n");
     printf("Date opened: %d-%d\n",newAcc.opened.month,newAcc.opened.year);
     return 1;
