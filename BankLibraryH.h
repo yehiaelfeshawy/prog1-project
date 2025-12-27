@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
-
+#include <time.h>
 typedef struct
 {int month;
 int year;
@@ -33,6 +33,8 @@ int addAccount(Account acc[], int *count, int max_acc);
 
 int deleteAccount(Account acc[], int *count);
 int modifyAccount(Account acc[], int);
+int withdraw(Account acc[],int);
+int changeStatus(Account acc[],int);
 
 
 void runSystem(void);
