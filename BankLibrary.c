@@ -153,15 +153,10 @@ int addAccount(Account acc[], int *count, int max_acc)
     printf("Enter Initial Balance: ");
     scanf("%lf", &newAcc.balance);
 
-    do {
-        printf("Enter Opening Month (1-12): ");
-        scanf("%d", &newAcc.opened.month);
-    } while (newAcc.opened.month < 1 || newAcc.opened.month > 12);
-
-    do {
-        printf("Enter Opening Year: ");
-        scanf("%d", &newAcc.opened.year);
-    } while (newAcc.opened.year < 1900);
+    time_t t = time(NULL);
+    struct tm tm = *localtime(&t);
+    newAcc.opened.month = tm.tm_mon + 1;
+    newAcc.opened.year  = tm.tm_year + 1900;
 
     strcpy(newAcc.status, "active");
 
