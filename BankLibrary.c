@@ -323,6 +323,24 @@ acc[i].dailyWithdrawn=acc[i].dailyWithdrawn+amount;
 printf("Withdrawal successful.\n");
 printf("Remaining balance: %lf\n",acc[i].balance);
 printf("Withdrawn today: %lf\n",acc[i].dailyWithdrawn);
+FILE *fp=fopen("accounts.txt", "w");
+    if(fp) {
+        for(j=0;j<count;j++) {
+            fprintf(fp, "%lld,%s,%s,%.2lf,%s,%d-%d, %s\n",
+                acc[j].accountNumber,
+                acc[j].name,
+                acc[j].email,
+                acc[j].balance,
+                acc[j].mobile,
+                acc[j].opened.month,
+                acc[j].opened.year,
+                acc[j].status);
+}
+        fclose(fp);
+}
+else{
+        printf("Warning: Failed to update accounts file!\n");
+}
 return 1;
 }
 int deposit(Account acc[],int count){
@@ -355,6 +373,24 @@ if(amount<=0||amount>10000){
 acc[i].balance=acc[i].balance+amount;
 printf("Deposit successful.\n");
 printf("Current balance: %lf",acc[i].balance);
+FILE *fp=fopen("accounts.txt", "w");
+    if(fp){
+        for(j=0;j<count;j++) {
+            fprintf(fp, "%lld,%s,%s,%.2lf,%s,%d-%d, %s\n",
+                acc[j].accountNumber,
+                acc[j].name,
+                acc[j].email,
+                acc[j].balance,
+                acc[j].mobile,
+                acc[j].opened.month,
+                acc[j].opened.year,
+                acc[j].status);
+}
+        fclose(fp);
+}
+else{
+        printf("Warning: Failed to update accounts file!\n");
+}
 return 1;
 }
 
