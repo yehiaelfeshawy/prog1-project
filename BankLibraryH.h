@@ -40,16 +40,21 @@ int deposit(Account acc[],int);
 int report(Account acc[], int count);
 int transfer(Account acc[], int count);
 
+void swap(Account *x, Account *y);
 void printAccounts(Account acc[], int count);
 void sortByName(Account acc[], int count);
 void sortByBalance(Account acc[], int count);
 void sortByDate(Account acc[], int count);
 void sortByStatus(Account acc[], int count);
 
-void swap(Account *x, Account *y);
+
+void saveAfterDelete(Account acc[], int count);
+void deleteByDate(Account acc[], int *count);
+void deleteInactive(Account acc[], int *count);
+void deleteMultiple(Account acc[], int *count);
+
 
 
 void runSystem(void);
 
 #endif // BANKLIBRARYH_H_INCLUDED
-
