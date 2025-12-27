@@ -325,6 +325,38 @@ printf("Remaining balance: %lf\n",acc[i].balance);
 printf("Withdrawn today: %lf\n",acc[i].dailyWithdrawn);
 return 1;
 }
+int deposit(Account acc[],int count){
+long long accnum;
+double amount;
+int i, found=0;
+printf("Enter your account number: ");
+scanf("%lld",&accnum);
+while(getchar()!='\n');
+for(i=0;i<count;i++){
+    if(acc[i].accountNumber==accnum){
+        found=1;
+        break;
+    }
+}
+if(!found){
+    printf("Account does not exist.\n");
+    return 0;
+}
+if(strcmp(acc[i].status,"inactive")==0){
+    printf("Account inactive. Deposit not allowed.\n");
+    return 0;
+}
+printf("Enter deposit amount: ");
+scanf("%lf",&amount);
+if(amount<=0||amount>10000){
+    printf("Invalid amount.\n");
+    return 0;
+}
+acc[i].balance=acc[i].balance+amount;
+printf("Deposit successful.\n");
+printf("Current balance: %lf",acc[i].balance);
+return 1;
+}
 
 
 
@@ -349,6 +381,7 @@ void runSystem(void)
         printf("5. Modify Account\n");
         printf("6. Change Account Status\n");
         printf("7. Withdraw\n");
+        printf("8. Deposit\n");
         printf("0. Exit\n");
         printf("Enter choice: ");
         scanf("%d", &choice);
@@ -382,7 +415,11 @@ void runSystem(void)
         case 7:
             withdraw(accounts,totalAccounts);
             break;
-
+         
+        case 8:
+            deposit(accounts,totalAccounts);
+            break:
+         
         case 0:
             printf("Goodbye!\n");
             break;
