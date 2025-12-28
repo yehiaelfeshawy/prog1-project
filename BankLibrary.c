@@ -129,6 +129,7 @@ int addAccount(Account acc[], int *count, int max_acc)
 {
     int i;
     Account newAcc;
+    char accNumStr[20];
 
     if (*count >= max_acc)
     {
@@ -138,6 +139,29 @@ int addAccount(Account acc[], int *count, int max_acc)
 
     printf("Enter Account Number: ");
     scanf("%lld", &newAcc.accountNumber);
+    int isValidAccountNumber(char s[])
+{
+    if (strlen(s) != 10)
+        return 0;
+
+    for (int i = 0; i < 10; i++)
+        if (s[i] < '0' || s[i] > '9')
+            return 0;
+
+    return 1;
+}
+do
+
+{
+    printf("Enter Account Number (10 digits): ");
+    fgets(accNumStr, sizeof(accNumStr), stdin);
+    accNumStr[strcspn(accNumStr, "\r\n")] = '\0';
+
+    if (!isValidAccountNumber(accNumStr))
+        printf("Invalid account number. Must be exactly 10 digits.\n");
+
+} while (!isValidAccountNumber(accNumStr));
+
 
     for (i = 0; i < *count; i++)
     {
@@ -146,7 +170,8 @@ int addAccount(Account acc[], int *count, int max_acc)
             printf("Duplicate account number!\n");
             return 0;
         }
-    }
+    }newAcc.accountNumber = atoll(accNumStr);
+
 
     getchar();
     printf("Enter Name: ");
@@ -826,7 +851,7 @@ void runSystem(void)
         case 11:
     printAccounts(accounts,totalAccounts);
     break;
-        
+
         case 12:
     deleteMultiple(accounts, &totalAccounts);
     break;
