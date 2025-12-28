@@ -156,6 +156,21 @@ int addAccount(Account acc[], int *count, int max_acc)
     printf("Enter Email: ");
     fgets(newAcc.email, sizeof(newAcc.email), stdin);
     newAcc.email[strcspn(newAcc.email, "\n")] = '\0';
+int isValidEmail(char email[])
+{
+    return (strchr(email, '@') != NULL &&
+            strchr(email, '.') != NULL);
+}
+do
+{
+    printf("Enter email: ");
+    fgets(acc[*count].email, sizeof(acc[*count].email), stdin);
+    acc[*count].email[strcspn(acc[*count].email, "\r\n")] = '\0';
+
+    if (!isValidEmail(acc[*count].email))
+        printf("Invalid email. Must contain @ and .\n");
+
+} while (!isValidEmail(acc[*count].email));
 
     printf("Enter Mobile: ");
     fgets(newAcc.mobile, sizeof(newAcc.mobile), stdin);
