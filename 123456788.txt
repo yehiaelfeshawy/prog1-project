@@ -1,0 +1,8 @@
+Account created
+Initial balance: 51000.00
+Withdrawn: 10000.00 | Balance: 41000.00
+Withdrawn: 10000.00 | Balance: 31000.00
+Withdrawn: 10000.00 | Balance: 21000.00
+Withdrawn: 10000.00 | Balance: 11000.00
+Withdrawn: 10000.00 | Balance: 1000.00
+Deposited: 1000.00 | Balance: 2000.00
