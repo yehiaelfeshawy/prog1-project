@@ -39,6 +39,36 @@ int login(void)
     {printf(RED "Try again invalid username or password\n" RESET);
         return 0; }
 }
+void saveAccounts(Account acc[], int count)
+{
+    FILE *fp = fopen("accounts.txt", "w");
+    if (!fp) return;
+    for (int i = 0; i < count; i++)
+        fprintf(fp, "%lld,%s,%s,%.2lf,%s,%d-%d, %s\n",
+                acc[i].accountNumber,
+                acc[i].name,
+                acc[i].email,
+                acc[i].balance,
+                acc[i].mobile,
+                acc[i].opened.month,
+                acc[i].opened.year,
+                acc[i].status);
+    fclose(fp);
+}
+void saveAccounts2(Account acc[], int count)
+{
+    FILE *fp = fopen("accounts.txt", "w");
+    if (!fp) return;
+    for (int i = 0; i < count; i++)
+        fprintf(fp, "%lld,%s,%s,%.2lf,%s,%d-%d, %s\n",
+                acc[i].accountNumber,
+                acc[i].name,
+                acc[i].email,
+                acc[i].balance,
+                acc[i].mobile);
+
+    fclose(fp);
+}
 int loadAccounts(Account acc[], int *count)
 {
 FILE *fp;
@@ -129,7 +159,7 @@ int addAccount(Account acc[], int *count, int max_acc)
 {
     int i;
     Account newAcc;
-    char accNumStr[20];
+    char filename[50];
 
     if (*count >= max_acc)
     {
@@ -139,29 +169,6 @@ int addAccount(Account acc[], int *count, int max_acc)
 
     printf("Enter Account Number: ");
     scanf("%lld", &newAcc.accountNumber);
-    int isValidAccountNumber(char s[])
-{
-    if (strlen(s) != 10)
-        return 0;
-
-    for (int i = 0; i < 10; i++)
-        if (s[i] < '0' || s[i] > '9')
-            return 0;
-
-    return 1;
-}
-do
-
-{
-    printf("Enter Account Number (10 digits): ");
-    fgets(accNumStr, sizeof(accNumStr), stdin);
-    accNumStr[strcspn(accNumStr, "\r\n")] = '\0';
-
-    if (!isValidAccountNumber(accNumStr))
-        printf("Invalid account number. Must be exactly 10 digits.\n");
-
-} while (!isValidAccountNumber(accNumStr));
-
 
     for (i = 0; i < *count; i++)
     {
@@ -170,8 +177,7 @@ do
             printf("Duplicate account number!\n");
             return 0;
         }
-    }newAcc.accountNumber = atoll(accNumStr);
-
+    }
 
     getchar();
     printf("Enter Name: ");
@@ -181,21 +187,6 @@ do
     printf("Enter Email: ");
     fgets(newAcc.email, sizeof(newAcc.email), stdin);
     newAcc.email[strcspn(newAcc.email, "\n")] = '\0';
-int isValidEmail(char email[])
-{
-    return (strchr(email, '@') != NULL &&
-            strchr(email, '.') != NULL);
-}
-do
-{
-    printf("Enter email: ");
-    fgets(acc[*count].email, sizeof(acc[*count].email), stdin);
-    acc[*count].email[strcspn(acc[*count].email, "\r\n")] = '\0';
-
-    if (!isValidEmail(acc[*count].email))
-        printf("Invalid email. Must contain @ and .\n");
-
-} while (!isValidEmail(acc[*count].email));
 
     printf("Enter Mobile: ");
     fgets(newAcc.mobile, sizeof(newAcc.mobile), stdin);
@@ -215,10 +206,9 @@ do
     (*count)++;
 
     FILE *fp = fopen("accounts.txt","a");
-    if(fp == NULL){
-        printf("Error opening file to save account.\n");
+    if (!fp)
         return 0;
-    }
+
     fprintf(fp, "%lld,%s,%s,%.2lf,%s,%d-%d, %s\n",
             newAcc.accountNumber,
             newAcc.name,
@@ -230,8 +220,17 @@ do
             newAcc.status);
     fclose(fp);
 
+    sprintf(filename, "%lld.txt", newAcc.accountNumber);
+    FILE *fa = fopen(filename, "w");
+    if (fa)
+    {
+        fprintf(fa, "Account created\n");
+        fprintf(fa, "Initial balance: %.2lf\n", newAcc.balance);
+        fclose(fa);
+    }
+
     printf("Account added successfully.\n");
-    printf("Date opened: %d-%d\n",newAcc.opened.month,newAcc.opened.year);
+    printf("Date opened: %d-%d\n", newAcc.opened.month, newAcc.opened.year);
     return 1;
 }
 
@@ -242,59 +241,86 @@ int deleteAccount(Account acc[], int *count)
 
     printf("Enter Account Number to delete: ");
     scanf("%lld", &accNum);
+    while (getchar() != '\n');
 
     for (i = 0; i < *count; i++)
     {
-    if (acc[i].accountNumber == accNum)
-    {
-    if (acc[i].balance != 0)
-    {
-    printf("Cannot delete account. Balance is not zero.\n");
-    return 0;
-    }
-    for (j = i; j < *count - 1; j++)
-    {
-    acc[j] = acc[j + 1];
-    }
-    (*count)--;
-    printf("Account deleted successfully.\n");
-    return 1;
-    }
+        if (acc[i].accountNumber == accNum)
+        {
+            if (acc[i].balance != 0)
+            {
+                printf("Cannot delete account. Balance is not zero.\n");
+                return 0;
+            }
+            for (j = i; j < *count - 1; j++)
+            {
+                acc[j] = acc[j + 1];
+            }
+            (*count)--;
+
+            saveAfterDelete(acc,*count);
+
+
+            printf("Account deleted successfully.\n");
+            return 1;
+        }
     }
 
     printf("Account not found.\n");
     return 0;
 }
-int modifyAccount(Account acc[], int count){
-long long accnum;
-int i, found=0;
-printf("enter your account number to modify: ");
-scanf("%lld",&accnum);
-getchar();
-for(i=0;i<count;i++){
-    if(acc[i].accountNumber==accnum){
-        printf("\ncurrent name: %s\n",acc[i].name);
-        printf("enter new name: ");
-        fgets(acc[i].name,sizeof(acc[i].name),stdin);
-        acc[i].name[strcspn(acc[i].name,"\n")]='\0';
-        printf("\ncurrent email: %s\n",acc[i].email);
-        printf("enter new email: ");
-        fgets(acc[i].email,sizeof(acc[i].email),stdin);
-        acc[i].email[strcspn(acc[i].email,"\n")]='\0';
-        printf("current phone number: %s\n",acc[i].mobile);
-        printf("enter new phone number: ");
-        fgets(acc[i].mobile,sizeof(acc[i].mobile),stdin);
-        acc[i].mobile[strcspn(acc[i].mobile,"\n")]='\0';
-        printf("account modified succesfully.\n");
-        found =1;
-        break;
-     }
-}
-if(!found){
+int modifyAccount(Account acc[], int count)
+{
+    long long accnum;
+    int i;
+
+    printf("enter your account number to modify: ");
+    scanf("%lld", &accnum);
+    getchar();
+
+    for (i = 0; i < count; i++)
+    {
+        if (acc[i].accountNumber == accnum)
+        {
+            printf("\ncurrent name: %s\n", acc[i].name);
+            printf("enter new name: ");
+            fgets(acc[i].name, sizeof(acc[i].name), stdin);
+            acc[i].name[strcspn(acc[i].name, "\n")] = '\0';
+
+            printf("\ncurrent email: %s\n", acc[i].email);
+            printf("enter new email: ");
+            fgets(acc[i].email, sizeof(acc[i].email), stdin);
+            acc[i].email[strcspn(acc[i].email, "\n")] = '\0';
+
+            printf("current phone number: %s\n", acc[i].mobile);
+            printf("enter new phone number: ");
+            fgets(acc[i].mobile, sizeof(acc[i].mobile), stdin);
+            acc[i].mobile[strcspn(acc[i].mobile, "\n")] = '\0';
+
+            FILE *fp = fopen("accounts.txt", "w");
+            if (!fp) return 0;
+
+            for (int j = 0; j < count; j++)
+            {
+                fprintf(fp, "%lld,%s,%s,%.2lf,%s,%d-%d, %s\n",
+                        acc[j].accountNumber,
+                        acc[j].name,
+                        acc[j].email,
+                        acc[j].balance,
+                        acc[j].mobile,
+                        acc[j].opened.month,
+                        acc[j].opened.year,
+                        acc[j].status);
+            }
+
+            fclose(fp);
+            printf("account modified successfully.\n");
+            return 1;
+        }
+    }
+
     printf("account not found.\n");
     return 0;
-}
-return 1;
 }
 
 int changeStatus(Account acc[], int count){
@@ -326,127 +352,185 @@ if(strcmp(acc[i].status,newStatus)==0){
     printf("Account is already %s.\n",newStatus);
     return 0;
 }
+
 strcpy(acc[i].status,newStatus);
+saveAccounts(acc,count);
 printf("Account status successfully changed to %s.\n",newStatus);
 return 1;
 
 
 }
 
-int withdraw(Account acc[],int count){
-long long accnum;
-double amount;
-int i,found=0;
-printf("Enter account number: ");
-scanf("%lld",&accnum);
-while(getchar()!='\n');
-for(i=0;i<count;i++){
-    if(acc[i].accountNumber==accnum){
-        found=1;
-        break;
-    }
-}
-if(!found){
-    printf("Account does not exist.\n");
-    return 0;
-}
-if(strcmp(acc[i].status,"inactive")==0){
-    printf("Account is inactive. Withdrawals not allowed.\n");
-    return 0;
-}
-printf("\nEnter withdrawal amount: ");
-scanf("%lf",&amount);
-if(amount<=0){
-    printf("invalid amount");
-    return 0;
-}
-if(amount>acc[i].balance){
-    printf("Insufficient funds.\n");
-    return 0;
-}
-if(acc[i].dailyWithdrawn+amount>50000){
-    printf(YELLOW "Daily limit exceeded.\n" RESET);
+int withdraw(Account acc[], int count)
+{
+    long long accnum;
+    double amount;
+    int i, found = 0;
+    char filename[50];
+    FILE *fa;
+    double dailyTotal = 0.0;
 
-    printf("You can withdraw up to %lf today.\n", 50000-acc[i].dailyWithdrawn);
-    return 0;
-}
-acc[i].balance=acc[i].balance-amount;
-acc[i].dailyWithdrawn=acc[i].dailyWithdrawn+amount;
-printf(GREEN "Withdrawal successful.\n" RESET);
-printf("Remaining balance: %lf\n",acc[i].balance);
-printf("Withdrawn today: %lf\n",acc[i].dailyWithdrawn);
-FILE *fp=fopen("accounts.txt", "w");
-int j;
-    if(fp) {
-        for(j=0;j<count;j++) {
+    printf("Enter account number: ");
+    scanf("%lld", &accnum);
+    while (getchar() != '\n');
+
+
+    for (i = 0; i < count; i++) {
+        if (acc[i].accountNumber == accnum) {
+            found = 1;
+            break;
+        }
+    }
+
+    if (!found) {
+        printf("Account does not exist.\n");
+        return 0;
+    }
+
+    if (strcmp(acc[i].status, "inactive") == 0) {
+        printf("Account is inactive. Withdrawals not allowed.\n");
+        return 0;
+    }
+
+
+    sprintf(filename, "%lld.txt", acc[i].accountNumber);
+    fa = fopen(filename, "r");
+    if (fa) {
+        char line[200];
+        while (fgets(line, sizeof(line), fa) != NULL) {
+            if (strstr(line, "Withdrawn:") != NULL) {
+                double prevAmount;
+                sscanf(line, "Withdrawn: %lf", &prevAmount);
+                dailyTotal += prevAmount;
+            }
+        }
+        fclose(fa);
+    }
+
+    acc[i].dailyWithdrawn = dailyTotal;
+
+    printf("\nEnter withdrawal amount (max 10000 per transaction): ");
+    scanf("%lf", &amount);
+
+    if (amount <= 0 || amount > 10000) {
+        printf("Invalid amount. You can withdraw up to 10000 per transaction.\n");
+        return 0;
+    }
+
+    if (amount > acc[i].balance) {
+        printf("Insufficient funds.\n");
+        return 0;
+    }
+
+    if (acc[i].dailyWithdrawn + amount > 50000) {
+        printf(YELLOW "Daily limit exceeded.\n" RESET);
+        printf("You can withdraw up to %.2lf today.\n", 50000 - acc[i].dailyWithdrawn);
+        return 0;
+    }
+
+
+    acc[i].balance -= amount;
+    acc[i].dailyWithdrawn += amount;
+
+    printf(GREEN "Withdrawal successful.\n" RESET);
+    printf("Remaining balance: %.2lf\n", acc[i].balance);
+    printf("Withdrawn today: %.2lf\n", acc[i].dailyWithdrawn);
+
+
+    FILE *fp = fopen("accounts.txt", "w");
+    if (fp) {
+        for (int j = 0; j < count; j++) {
             fprintf(fp, "%lld,%s,%s,%.2lf,%s,%d-%d, %s\n",
-                acc[j].accountNumber,
-                acc[j].name,
-                acc[j].email,
-                acc[j].balance,
-                acc[j].mobile,
-                acc[j].opened.month,
-                acc[j].opened.year,
-                acc[j].status);
-}
+                    acc[j].accountNumber,
+                    acc[j].name,
+                    acc[j].email,
+                    acc[j].balance,
+                    acc[j].mobile,
+                    acc[j].opened.month,
+                    acc[j].opened.year,
+                    acc[j].status);
+        }
         fclose(fp);
+    }
+
+
+    fa = fopen(filename, "a");
+    if (fa) {
+        fprintf(fa, "Withdrawn: %.2lf | Balance: %.2lf\n", amount, acc[i].balance);
+        fclose(fa);
+    }
+
+    return 1;
 }
-else{
+
+int deposit(Account acc[], int count)
+{
+    long long accnum;
+    double amount;
+    int i, found = 0;
+    char filename[50];
+    FILE *fa;
+
+    printf("Enter your account number: ");
+    scanf("%lld", &accnum);
+    while (getchar() != '\n');
+
+    for (i = 0; i < count; i++) {
+        if (acc[i].accountNumber == accnum) {
+            found = 1;
+            break;
+        }
+    }
+
+    if (!found) {
+        printf("Account does not exist.\n");
+        return 0;
+    }
+
+    if (strcmp(acc[i].status, "inactive") == 0) {
+        printf("Account inactive. Deposits not allowed.\n");
+        return 0;
+    }
+
+    printf("Enter deposit amount (max 10000 per transaction): ");
+    scanf("%lf", &amount);
+
+    if (amount <= 0 || amount > 10000) {
+        printf("Invalid amount. You can deposit up to 10000 per transaction.\n");
+        return 0;
+    }
+
+    acc[i].balance += amount;
+
+    printf(GREEN "Deposit successful.\n" RESET);
+    printf("Current balance: %.2lf\n", acc[i].balance);
+
+    FILE *fp = fopen("accounts.txt", "w");
+    if (fp) {
+        for (int j = 0; j < count; j++) {
+            fprintf(fp, "%lld,%s,%s,%.2lf,%s,%d-%d, %s\n",
+                    acc[j].accountNumber,
+                    acc[j].name,
+                    acc[j].email,
+                    acc[j].balance,
+                    acc[j].mobile,
+                    acc[j].opened.month,
+                    acc[j].opened.year,
+                    acc[j].status);
+        }
+        fclose(fp);
+    } else {
         printf(RED "Warning: Failed to update accounts file!\n" RESET);
-}
-return 1;
-}
-
-int deposit(Account acc[],int count){
-long long accnum;
-double amount;
-int i, found=0;
-printf("Enter your account number: ");
-scanf("%lld",&accnum);
-while(getchar()!='\n');
-for(i=0;i<count;i++){
-    if(acc[i].accountNumber==accnum){
-        found=1;
-        break;
     }
-}
-if(!found){
-    printf("Account does not exist.\n");
-    return 0;
-}
-if(strcmp(acc[i].status,"inactive")==0){
-    printf("Account inactive. Deposit not allowed.\n");
-    return 0;
-}
-printf("Enter deposit amount: ");
-scanf("%lf",&amount);
-if(amount<=0||amount>10000){
-    printf("Invalid amount.\n");
-    return 0;
-}
-acc[i].balance=acc[i].balance+amount;
-printf(GREEN "Deposit successful.\n" RESET);
-printf("Current balance: %lf",acc[i].balance);
-FILE *fp=fopen("accounts.txt", "w");
-int j;
-    if(fp){
-        for(j=0;j<count;j++) {
-            fprintf(fp, "%lld,%s,%s,%.2lf,%s,%d-%d, %s\n",
-                acc[j].accountNumber,
-                acc[j].name,
-                acc[j].email,
-                acc[j].balance,
-                acc[j].mobile,
-                acc[j].opened.month,
-                acc[j].opened.year,
-                acc[j].status);
-}
-        fclose(fp);
-}
-else{
-        printf("Warning: Failed to update accounts file!\n");
-}
-return 1;
+
+    sprintf(filename, "%lld.txt", acc[i].accountNumber);
+    fa = fopen(filename, "a");
+    if (fa) {
+        fprintf(fa, "Deposited: %.2lf | Balance: %.2lf\n", amount, acc[i].balance);
+        fclose(fa);
+    }
+
+    return 1;
 }
 
 int report(Account acc[], int count)
