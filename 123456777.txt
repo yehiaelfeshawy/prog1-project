@@ -1,0 +1,6 @@
+Account created
+Initial balance: 60000.00
+Withdrawn: 10000.00 | Balance: 50000.00
+Withdrawn: 10000.00 | Balance: 40000.00
+Withdrawn: 10000.00 | Balance: 30000.00
+Withdrawn: 10000.00 | Balance: 20000.00
